@@ -36,7 +36,7 @@ USO
   python fill_template.py -t formato.docx -d usuario.md -o resultado/juan.docx
 
   # Ajustar ancho máximo de imágenes (por defecto 15 cm)
-  python fill_template.py -t formato.docx -d usuario.md --ancho 12
+  python fill_template.py -t formato.docx -d usuario.md --ancho 10
 """
 
 import argparse
@@ -234,7 +234,7 @@ def main():
                         help="Archivo .md con frontmatter YAML y sección de imágenes")
     parser.add_argument("-o", "--salida", metavar="SALIDA.docx",
                         help="Ruta del archivo de salida (por defecto: <datos>_relleno.docx)")
-    parser.add_argument("--ancho", type=float, default=15.0, metavar="CM",
+    parser.add_argument("--ancho", type=float, default=12.0, metavar="CM",
                         help="Ancho máximo de imágenes en cm (por defecto: 15)")
     args = parser.parse_args()
 
