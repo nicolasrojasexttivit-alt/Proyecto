@@ -1,5 +1,5 @@
 ---
-GESTOR: GESTOR Jhoan Nicolas Cruz Sierra
+GESTOR: GESTOR':' Jhoan Nicolas Cruz Sierra
 FECHA: FECHA 00/00/00
 LUGAR: LUGAR XD
 CARGO: CARGO Analista Soporte en Sitio
