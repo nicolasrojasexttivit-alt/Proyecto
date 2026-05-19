@@ -62,7 +62,7 @@ def preguntar_si_no(mensaje: str, default: str = "N") -> bool:
     while True:
         resp = input(f"{mensaje} (S/N) [{default}]: ").strip().upper()
         if resp == "":
-            resp = default
+            resp = "N"
         if resp in ("S", "N"):
             return resp == "S"
         print("   Por favor responde S o N.")
@@ -72,7 +72,8 @@ def obtener_observaciones(seccion: str) -> str:
     """Pide observaciones. Si solo Enter → cadena vacía."""
     print(f"\n📝 Observaciones para {seccion} (Enter = ninguna):")
     obs = input("> ").strip()
-    return obs if obs else ""
+    mensaje = "Observaciones: "
+    return "Observaciones: " + obs if obs else "Observaciones: Sin observaciones"
 
 
 def seccion_1_pna():
@@ -83,11 +84,11 @@ def seccion_1_pna():
 
     if not preguntar_si_no("¿Hay algún cambio respecto al default (NO)?"):
         return {
-            "FACEBOOK_SI": "", "FACEBOOK_NO": "X",
-            "INSTA_SI": "", "INSTA_NO": "X",
-            "X_SI": "", "X_NO": "X",
-            "TIKTOK_SI": "", "TIKTOK_NO": "X",
-            "OBSERVACIONES_PNAUTORIZADAS": ""
+            "FACEBOOK_SI": "' '", "FACEBOOK_NO": "X",
+            "INSTA_SI": "' '", "INSTA_NO": "X",
+            "X_SI": "' '", "X_NO": "X",
+            "TIKTOK_SI": "' '", "TIKTOK_NO": "X",
+            "OBSERVACIONES_PNAUTORIZADAS": "Observaciones: Sin observaciones"
         }
 
     datos = {}
@@ -96,8 +97,8 @@ def seccion_1_pna():
         key_no = app.replace(" / ", "_").replace(" ", "_").upper() + "_NO"
         
         tiene_acceso = preguntar_si_no(f"¿Permite acceso a {app}?")
-        datos[key_si] = "X" if tiene_acceso else ""
-        datos[key_no] = "" if tiene_acceso else "X"
+        datos[key_si] = "X" if tiene_acceso else "' '"
+        datos[key_no] = "' '" if tiene_acceso else "X"
 
     datos["OBSERVACIONES_PNAUTORIZADAS"] = obtener_observaciones("Páginas no autorizadas")
     return datos
@@ -111,19 +112,19 @@ def seccion_2_chat():
 
     if not preguntar_si_no("¿Hay algún cambio?"):
         return {
-            "WHAT_WEB_S": "", "WHAT_WEB_N": "X",
-            "WHAT_APP_S": "", "WHAT_APP_N": "X",
-            "OBSERVACIONES": ""
+            "WHAT_WEB_S": "' '", "WHAT_WEB_N": "X",
+            "WHAT_APP_S": "' '", "WHAT_APP_N": "X",
+            "OBSERVACIONES_WHATSAPP": "Observaciones: Sin observaciones"
         }
 
     datos = {}
     for app in ["WHATSAPP WEB", "WHATSAPP APP"]:
         prefix = "WHAT_WEB" if "WEB" in app else "WHAT_APP"
         permite = preguntar_si_no(f"¿Permite acceso a {app}?")
-        datos[f"{prefix}_S"] = "X" if permite else ""
-        datos[f"{prefix}_N"] = "" if permite else "X"
+        datos[f"{prefix}_S"] = "X" if permite else "' '"
+        datos[f"{prefix}_N"] = "' '" if permite else "X"
 
-    datos["OBSERVACIONES"] = obtener_observaciones("Chat en línea")
+    datos["OBSERVACIONES_WHATSAPP"] = obtener_observaciones("Chat en línea")
     return datos
 
 
@@ -135,14 +136,14 @@ def seccion_3_antivirus():
 
     if not preguntar_si_no("¿Hay algún cambio en CrowdStrike u otros?"):
         return {
-            "CROWD_SI": "X", "CROWD_NO": "",
-            "OBSERVACIONES_ANTI": ""
+            "CROWD_SI": "X", "CROWD_NO": "' '",
+            "OBSERVACIONES_ANTI": "Observaciones: Sin observaciones"
         }
 
     crowd_si = preguntar_si_no("¿Tiene CrowdStrike EDR instalado?")
     datos = {
-        "CROWD_SI": "X" if crowd_si else "",
-        "CROWD_NO": "" if crowd_si else "X",
+        "CROWD_SI": "X" if crowd_si else "' '",
+        "CROWD_NO": "' '" if crowd_si else "X",
         "OBSERVACIONES_ANTI": obtener_observaciones("Antivirus/EDR")
     }
     return datos
@@ -156,14 +157,14 @@ def seccion_4_plugin():
 
     if not preguntar_si_no("¿Hay algún cambio?"):
         return {
-            "TRELL_SI": "X", "TRELL_NO": "",
-            "OBSERVACIONES_TRELL": ""
+            "TRELL_SI": "X", "TRELL_NO": "' '",
+            "OBSERVACIONES_TRELL": "Observaciones: Sin observaciones"
         }
 
     trell_si = preguntar_si_no("¿Tiene Trellix Control Web instalado y activo?")
     datos = {
-        "TRELL_SI": "X" if trell_si else "",
-        "TRELL_NO": "" if trell_si else "X",
+        "TRELL_SI": "X" if trell_si else "' '",
+        "TRELL_NO": "' '" if trell_si else "X",
         "OBSERVACIONES_TRELL": obtener_observaciones("Plugin Navegador")
     }
     return datos
@@ -177,17 +178,17 @@ def seccion_5_control_remoto():
 
     if not preguntar_si_no("¿Hay algún cambio?"):
         return {
-            "ANY_SI": "", "ANY_NO": "X",
-            "TEAM_SI": "", "TEAM_NO": "X",
-            "OBSERVACIONES_CREMOTO": ""
+            "ANY_SI": "' '", "ANY_NO": "X",
+            "TEAM_SI": "' '", "TEAM_NO": "X",
+            "OBSERVACIONES_CREMOTO": "Observaciones: Sin observaciones"
         }
 
     datos = {}
     for tool in ["ANYDESK", "TEAM VIEWER"]:
         prefix = "ANY" if "ANY" in tool else "TEAM"
         instalado = preguntar_si_no(f"¿Tiene instalado {tool}?")
-        datos[f"{prefix}_SI"] = "X" if instalado else ""
-        datos[f"{prefix}_NO"] = "" if instalado else "X"
+        datos[f"{prefix}_SI"] = "X" if instalado else "' '"
+        datos[f"{prefix}_NO"] = "' '" if instalado else "X"
 
     datos["OBSERVACIONES_CREMOTO"] = obtener_observaciones("Control Remoto Instalado")
     return datos
@@ -201,9 +202,9 @@ def seccion_6_acceso_web():
 
     if not preguntar_si_no("¿Hay algún cambio?"):
         return {
-            "ANYW_SI": "", "ANYW_NO": "X",
-            "TEAMW_SI": "", "TEAMW_NO": "X",
-            "OBSERVACIONS_CRWEB": ""
+            "ANYW_SI": "' '", "ANYW_NO": "X",
+            "TEAMW_SI": "' '", "TEAMW_NO": "X",
+            "OBSERVACIONS_CRWEB": "Observaciones: Sin observaciones"
         }
 
     datos = {}
@@ -224,6 +225,7 @@ def seccion_7_panel():
     print("="*60)
     tiene_no_autorizados = preguntar_si_no("¿El equipo contiene programas NO autorizados?")
     obs = obtener_observaciones("Programas instalados")
+    print(obs)
     return {
         "OBSERVACIONES_PANEL": obs,
         # Puedes agregar más campos si quieres marcar SI/NO explícitamente

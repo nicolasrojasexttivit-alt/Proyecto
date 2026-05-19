@@ -9,38 +9,38 @@ LUGAR: LUGAR XD
 CARGO: CARGO Analista Soporte en Sitio
 CIUDAD: Bogotá
 tipo_actividad: Inventario de equipos
-FACEBOOK_SI: X
-FACEBOOK_NO: 
-INSTAGRAM_SI: X
-INSTAGRAM_NO: 
-X_TWITTER_SI: 
-X_TWITTER_NO: X
-TIKTOK_SI: 
+FACEBOOK_SI: ' '
+FACEBOOK_NO: X
+INSTA_SI: ' '
+INSTA_NO: X
+X_SI: ' '
+X_NO: X
+TIKTOK_SI: ' '
 TIKTOK_NO: X
-OBSERVACIONES_PNAUTORIZADAS: Permite acceso a Facebook e instagram
-WHAT_WEB_S: 
+OBSERVACIONES_PNAUTORIZADAS: "Observaciones: Sin observaciones"
+WHAT_WEB_S: ' '
 WHAT_WEB_N: X
-WHAT_APP_S: 
+WHAT_APP_S: ' '
 WHAT_APP_N: X
-OBSERVACIONES: 
-CROWD_SI: X
-CROWD_NO: 
-OBSERVACIONES_ANTI: 
+OBSERVACIONES_WHATSAPP: "Observaciones: Sin observaciones"
+CROWD_SI: ' '
+CROWD_NO: X
+OBSERVACIONES_ANTI: "Observaciones: No tieneeeee"
 TRELL_SI: X
-TRELL_NO: 
-OBSERVACIONES_TRELL: Ninguna
-ANY_SI: 
+TRELL_NO: ' '
+OBSERVACIONES_TRELL: "Observaciones: Sin observaciones"
+ANY_SI: ' '
 ANY_NO: X
-TEAM_SI: 
+TEAM_SI: ' '
 TEAM_NO: X
-OBSERVACIONES_CREMOTO: 
-ANYW_SI: 
+OBSERVACIONES_CREMOTO: "Observaciones: Sin observaciones"
+ANYW_SI: ' '
 ANYW_NO: X
-TEAMW_SI: 
+TEAMW_SI: ' '
 TEAMW_NO: X
-OBSERVACIONS_CRWEB: Anydesk se queda cargando
-OBSERVACIONES_PANEL: 
-OBSERVACIONES_SAP: No tiene entornos configurados
+OBSERVACIONS_CRWEB: "Observaciones: Sin observaciones"
+OBSERVACIONES_PANEL: "Observaciones: Sin observaciones"
+OBSERVACIONES_SAP: "Observaciones: Sin observaciones"
 ---
 
 imagenes:
