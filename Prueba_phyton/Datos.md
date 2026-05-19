@@ -15,6 +15,8 @@ X_SI: ' '
 X_NO: X
 TIKTOK_SI: ' '
 TIKTOK_NO: X
+OBSERVACIONES_PNAUTORIZADAS: Observaciones':' 
+
 ---
 imagenes:
  IMAGEN_1: LSVPREMONTAN983/1 (1).png 
