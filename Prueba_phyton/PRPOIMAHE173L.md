@@ -4,9 +4,9 @@ USUARIO: INGRID YULIETH MAHECHA MENDEZ
 correo: "ingrid.mahecha@juanvaldezcafe.com"
 ip: 192.168.1.5
 GESTOR: "GESTOR: Jhoan Nicolas Cruz Sierra"
-FECHA: FECHA 00/00/00
-LUGAR: LUGAR XD
-CARGO: CARGO Analista Soporte en Sitio
+FECHA: "FECHA: 00/00/00"
+LUGAR: "LUGAR: XD"
+CARGO: "CARGO: Analista Soporte en Sitio"
 CIUDAD: Bogotá
 tipo_actividad: Inventario de equipos
 FACEBOOK_SI: ' '
@@ -23,9 +23,9 @@ WHAT_WEB_N: X
 WHAT_APP_S: ' '
 WHAT_APP_N: X
 OBSERVACIONES_WHATSAPP: "Observaciones: Sin observaciones"
-CROWD_SI: ' '
-CROWD_NO: X
-OBSERVACIONES_ANTI: "Observaciones: No tieneeeee"
+CROWD_SI: X
+CROWD_NO: ' '
+OBSERVACIONES_ANTI: "Observaciones: Sin observaciones"
 TRELL_SI: X
 TRELL_NO: ' '
 OBSERVACIONES_TRELL: "Observaciones: Sin observaciones"

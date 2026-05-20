@@ -19,9 +19,9 @@ import pandas as pd
 
 PROPIEDADES_FIJAS = {
     "GESTOR":        "GESTOR: Jhoan Nicolas Cruz Sierra",
-    "FECHA":           "FECHA 00/00/00",
-    "LUGAR":        "LUGAR XD",
-    "CARGO":          "CARGO Analista Soporte en Sitio",
+    "FECHA":           "FECHA: 00/00/00",
+    "LUGAR":        "LUGAR: XD",
+    "CARGO":          "CARGO: Analista Soporte en Sitio",
     "CIUDAD":           "Bogotá",
     "tipo_actividad": "Inventario de equipos",
 }
@@ -173,7 +173,7 @@ def seccion_4_plugin():
 def seccion_5_control_remoto():
     """Sección 5: Instalación Control Remoto - Default = NO"""
     print("\n" + "="*60)
-    print("5. INSTALACIÓN CONTROL REMOTO (Default: NO)")
+    print("5. INSTALACIÓN CONTROL REMOTO LOCAL (Default: NO)")
     print("="*60)
 
     if not preguntar_si_no("¿Hay algún cambio?"):
@@ -211,10 +211,10 @@ def seccion_6_acceso_web():
     for tool in ["ANYDESK - URL WEB", "TEAM VIEWER - URL WEB"]:
         prefix = "ANYW" if "ANY" in tool else "TEAMW"
         permite = preguntar_si_no(f"¿Permite acceso a {tool}?")
-        datos[f"{prefix}_SI"] = "X" if permite else ""
-        datos[f"{prefix}_NO"] = "" if permite else "X"
+        datos[f"{prefix}_SI"] = "X" if permite else "' '"
+        datos[f"{prefix}_NO"] = "' '" if permite else "X"
 
-    datos["OBSERVACIONS_CRWEB"] = obtener_observaciones("Acceso Web Control Remoto")
+    datos["OBSERVACIONS_CRWEB"] = obtener_observaciones("Acceso Web Control Remoto Web")
     return datos
 
 
