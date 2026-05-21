@@ -16,11 +16,13 @@ import pandas as pd
 # ══════════════════════════════════════════════════════════════
 #  ★  CONFIGURACIÓN — EDITA ESTA SECCIÓN  ★
 # ══════════════════════════════════════════════════════════════
-
+print("\n" + "="*60)
+fecha = input("Ingrese la fecha de toma de evidencias: ")
+print("\n" + "="*60)
 PROPIEDADES_FIJAS = {
     "GESTOR":        "GESTOR: Jhoan Nicolas Cruz Sierra",
-    "FECHA":           "FECHA: 00/00/00",
-    "LUGAR":        "LUGAR: XD",
+    "FECHA":           "FECHA: " + fecha,
+    "LUGAR":        "LUGAR: Bogotá",
     "CARGO":          "CARGO: Analista Soporte en Sitio",
     "CIUDAD":           "Bogotá",
     "tipo_actividad": "Inventario de equipos",
