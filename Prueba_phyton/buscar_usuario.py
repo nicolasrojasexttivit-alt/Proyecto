@@ -3,25 +3,7 @@
 buscar_usuario.py
 =================
 Busca un usuario por Hostname en un .xlsx y genera su archivo .md
-listo para usar con fill_template.py.
-
-USO
-───
-  # Modo interactivo (te pregunta el Hostname)
-  python buscar_usuario.py -x inventario.xlsx
-
-  # Directo por argumento
-  python buscar_usuario.py -x inventario.xlsx --Hostname PC-LAB-03
-
-  # Con carpeta de salida específica
-  python buscar_usuario.py -x inventario.xlsx --Hostname PC-LAB-03 -o salida/
-
-ESTRUCTURA DEL XLSX
-────────────────────
-  Columna A: Hostname
-  Columna B: Nombre
-  Columna C: Correo
-  Columna D: IP
+con preguntas interactivas por sección.
 """
 
 import argparse
@@ -34,26 +16,18 @@ import pandas as pd
 # ══════════════════════════════════════════════════════════════
 #  ★  CONFIGURACIÓN — EDITA ESTA SECCIÓN  ★
 # ══════════════════════════════════════════════════════════════
-
-# ── Propiedades fijas ──────────────────────────────────────────
-# Estas aparecen igual en TODOS los archivos .md, sin importar el usuario.
-# Agrega o quita las que necesites.
+print("\n" + "="*60)
+fecha = input("Ingrese la fecha de toma de evidencias: ")
+print("\n" + "="*60)
 PROPIEDADES_FIJAS = {
     "GESTOR":        "GESTOR: Jhoan Nicolas Cruz Sierra",
-    "FECHA":           "FECHA 00/00/00",
-    "LUGAR":        "LUGAR XD",
-    "CARGO":          "CARGO Analista Soporte en Sitio",
+    "FECHA":           "FECHA: " + fecha,
+    "LUGAR":        "LUGAR: Bogotá",
+    "CARGO":          "CARGO: Analista Soporte en Sitio",
     "CIUDAD":           "Bogotá",
     "tipo_actividad": "Inventario de equipos",
-    # Agrega más aquí:
-    # "otro_campo": "otro valor",
 }
 
-# ── Plantilla de imágenes ──────────────────────────────────────
-# Usa {Hostname} donde debe ir el Hostname del usuario.
-# Agrega o quita líneas según cuántas imágenes necesites.
-# Formato:  "NOMBRE_PLACEHOLDER": "{Hostname}/nombre_archivo.png"
-# Con ancho: "IMAGEN_3": "{Hostname}/captura.png @ 10"   (10 cm de ancho)
 PLANTILLA_IMAGENES = {
     "IMAGEN_1": "{Hostname}/1 (1).png",
     "IMAGEN_2": "{Hostname}/1 (2).png",
@@ -71,80 +45,228 @@ PLANTILLA_IMAGENES = {
     "IMAGEN_14": "{Hostname}/1 (14).png",
     "IMAGEN_15": "{Hostname}/1 (15).png",
     "IMAGEN_16": "{Hostname}/1 (16).png",
-
-    # Agrega más aquí:
-    # "IMAGEN_6": "{Hostname}/1 (6).png",
 }
 
-# ── Mapeo de columnas del xlsx ─────────────────────────────────
-# Clave   = nombre que tendrá en el .md (placeholder en el docx)
-# Valor   = nombre EXACTO de la columna en el xlsx (cabecera)
 COLUMNAS = {
-    "Hostname": "Hostname",   # columna A — también se usa para buscar
-    "USUARIO":   "Nombre",     # columna B
-    "correo":   "Correo",     # columna C
-    "ip":       "IP",         # columna D
-    # Si tienes más columnas en el xlsx, agrégalas aquí:
-    # "cargo": "Cargo",
+    "Hostname": "Hostname",
+    "USUARIO":   "Nombre",
+    "correo":   "Correo",
+    "ip":       "IP",
 }
+
+
+# ══════════════════════════════════════════════════════════════
+#  ★  NUEVA FUNCIONALIDAD: PREGUNTAS POR SECCIÓN  ★
+# ══════════════════════════════════════════════════════════════
+
+def preguntar_si_no(mensaje: str, default: str = "N") -> bool:
+    """Pregunta S/N con valor por defecto."""
+    while True:
+        resp = input(f"{mensaje} (S/N) [{default}]: ").strip().upper()
+        if resp == "":
+            resp = "N"
+        if resp in ("S", "N"):
+            return resp == "S"
+        print("   Por favor responde S o N.")
+
+
+def obtener_observaciones(seccion: str) -> str:
+    """Pide observaciones. Si solo Enter → cadena vacía."""
+    print(f"\n📝 Observaciones para {seccion} (Enter = ninguna):")
+    obs = input("> ").strip()
+    mensaje = "Observaciones: "
+    return "Observaciones: " + obs if obs else "Observaciones: Sin observaciones"
+
+
+def seccion_1_pna():
+    """Sección 1: Páginas no autorizadas - Default = NO"""
+    print("\n" + "="*60)
+    print("1. PÁGINAS NO AUTORIZADAS (Default: TODO en NO)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio respecto al default (NO)?"):
+        return {
+            "FACEBOOK_SI": "' '", "FACEBOOK_NO": "X",
+            "INSTA_SI": "' '", "INSTA_NO": "X",
+            "X_SI": "' '", "X_NO": "X",
+            "TIKTOK_SI": "' '", "TIKTOK_NO": "X",
+            "OBSERVACIONES_PNAUTORIZADAS": "Observaciones: Sin observaciones"
+        }
+
+    datos = {}
+    for app in ["FACEBOOK", "INSTAGRAM", "X / TWITTER", "TIKTOK"]:
+        key_si = app.replace(" / ", "_").replace(" ", "_").upper() + "_SI"
+        key_no = app.replace(" / ", "_").replace(" ", "_").upper() + "_NO"
+        
+        tiene_acceso = preguntar_si_no(f"¿Permite acceso a {app}?")
+        datos[key_si] = "X" if tiene_acceso else "' '"
+        datos[key_no] = "' '" if tiene_acceso else "X"
+
+    datos["OBSERVACIONES_PNAUTORIZADAS"] = obtener_observaciones("Páginas no autorizadas")
+    return datos
+
+
+def seccion_2_chat():
+    """Sección 2: Chat en línea - Default = NO"""
+    print("\n" + "="*60)
+    print("2. PLATAFORMAS DE CHAT EN LÍNEA (Default: NO)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio?"):
+        return {
+            "WHAT_WEB_S": "' '", "WHAT_WEB_N": "X",
+            "WHAT_APP_S": "' '", "WHAT_APP_N": "X",
+            "OBSERVACIONES_WHATSAPP": "Observaciones: Sin observaciones"
+        }
+
+    datos = {}
+    for app in ["WHATSAPP WEB", "WHATSAPP APP"]:
+        prefix = "WHAT_WEB" if "WEB" in app else "WHAT_APP"
+        permite = preguntar_si_no(f"¿Permite acceso a {app}?")
+        datos[f"{prefix}_S"] = "X" if permite else "' '"
+        datos[f"{prefix}_N"] = "' '" if permite else "X"
+
+    datos["OBSERVACIONES_WHATSAPP"] = obtener_observaciones("Chat en línea")
+    return datos
+
+
+def seccion_3_antivirus():
+    """Sección 3: Antivirus/EDR - Default = SÍ"""
+    print("\n" + "="*60)
+    print("3. ANTIVIRUS Y EDR (Default: McAfee y Symantec SÍ)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio en CrowdStrike u otros?"):
+        return {
+            "CROWD_SI": "X", "CROWD_NO": "' '",
+            "OBSERVACIONES_ANTI": "Observaciones: Sin observaciones"
+        }
+
+    crowd_si = preguntar_si_no("¿Tiene CrowdStrike EDR instalado?")
+    datos = {
+        "CROWD_SI": "X" if crowd_si else "' '",
+        "CROWD_NO": "' '" if crowd_si else "X",
+        "OBSERVACIONES_ANTI": obtener_observaciones("Antivirus/EDR")
+    }
+    return datos
+
+
+def seccion_4_plugin():
+    """Sección 4: Plugin navegador - Default = SÍ"""
+    print("\n" + "="*60)
+    print("4. PLUGIN NAVEGADOR (Default: SÍ)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio?"):
+        return {
+            "TRELL_SI": "X", "TRELL_NO": "' '",
+            "OBSERVACIONES_TRELL": "Observaciones: Sin observaciones"
+        }
+
+    trell_si = preguntar_si_no("¿Tiene Trellix Control Web instalado y activo?")
+    datos = {
+        "TRELL_SI": "X" if trell_si else "' '",
+        "TRELL_NO": "' '" if trell_si else "X",
+        "OBSERVACIONES_TRELL": obtener_observaciones("Plugin Navegador")
+    }
+    return datos
+
+
+def seccion_5_control_remoto():
+    """Sección 5: Instalación Control Remoto - Default = NO"""
+    print("\n" + "="*60)
+    print("5. INSTALACIÓN CONTROL REMOTO LOCAL (Default: NO)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio?"):
+        return {
+            "ANY_SI": "' '", "ANY_NO": "X",
+            "TEAM_SI": "' '", "TEAM_NO": "X",
+            "OBSERVACIONES_CREMOTO": "Observaciones: Sin observaciones"
+        }
+
+    datos = {}
+    for tool in ["ANYDESK", "TEAM VIEWER"]:
+        prefix = "ANY" if "ANY" in tool else "TEAM"
+        instalado = preguntar_si_no(f"¿Tiene instalado {tool}?")
+        datos[f"{prefix}_SI"] = "X" if instalado else "' '"
+        datos[f"{prefix}_NO"] = "' '" if instalado else "X"
+
+    datos["OBSERVACIONES_CREMOTO"] = obtener_observaciones("Control Remoto Instalado")
+    return datos
+
+
+def seccion_6_acceso_web():
+    """Sección 6: Acceso web a control remoto - Default = NO"""
+    print("\n" + "="*60)
+    print("6. ACCESO WEB CONTROL REMOTO (Default: NO)")
+    print("="*60)
+
+    if not preguntar_si_no("¿Hay algún cambio?"):
+        return {
+            "ANYW_SI": "' '", "ANYW_NO": "X",
+            "TEAMW_SI": "' '", "TEAMW_NO": "X",
+            "OBSERVACIONS_CRWEB": "Observaciones: Sin observaciones"
+        }
+
+    datos = {}
+    for tool in ["ANYDESK - URL WEB", "TEAM VIEWER - URL WEB"]:
+        prefix = "ANYW" if "ANY" in tool else "TEAMW"
+        permite = preguntar_si_no(f"¿Permite acceso a {tool}?")
+        datos[f"{prefix}_SI"] = "X" if permite else "' '"
+        datos[f"{prefix}_NO"] = "' '" if permite else "X"
+
+    datos["OBSERVACIONS_CRWEB"] = obtener_observaciones("Acceso Web Control Remoto Web")
+    return datos
+
+
+def seccion_7_panel():
+    """Sección 7: Programas instalados"""
+    print("\n" + "="*60)
+    print("7. PROGRAMAS INSTALADOS - PANEL DE CONTROL")
+    print("="*60)
+    tiene_no_autorizados = preguntar_si_no("¿El equipo contiene programas NO autorizados?")
+    obs = obtener_observaciones("Programas instalados")
+    print(obs)
+    return {
+        "OBSERVACIONES_PANEL": obs,
+        # Puedes agregar más campos si quieres marcar SI/NO explícitamente
+    }
+
+
+def seccion_8_sap():
+    """Sección 8: SAP"""
+    print("\n" + "="*60)
+    print("8. AUTENTICACIÓN EN SAP")
+    print("="*60)
+    obs = obtener_observaciones("SAP")
+    return {"OBSERVACIONES_SAP": obs}
+
 
 # ══════════════════════════════════════════════════════════════
 
-
-def leer_xlsx(xlsx_path: Path) -> pd.DataFrame:
-    """Carga el xlsx y valida que existan las columnas esperadas."""
-    try:
-        df = pd.read_excel(xlsx_path, dtype=str, keep_default_na=False)
-    except Exception as e:
-        sys.exit(f"ERROR al abrir el archivo: {e}")
-
-    df.columns = [c.strip() for c in df.columns]
-    df = df.fillna("").apply(lambda col: col.str.strip())
-
-    # Verificar columnas requeridas
-    cols_requeridas = list(COLUMNAS.values())
-    faltantes = [c for c in cols_requeridas if c not in df.columns]
-    if faltantes:
-        sys.exit(
-            f"ERROR: Columnas no encontradas en el xlsx: {faltantes}\n"
-            f"Columnas disponibles: {list(df.columns)}\n"
-            f"Revisa la sección COLUMNAS en el script."
-        )
-    return df
-
-
-def buscar_Hostname(df: pd.DataFrame, Hostname: str) -> dict | None:
-    """
-    Busca el Hostname (insensible a mayúsculas/espacios).
-    Devuelve el primer registro como dict, o None si no existe.
-    """
-    col_Hostname = COLUMNAS["Hostname"]
-    mascara = df[col_Hostname].str.upper() == Hostname.strip().upper()
-    coincidencias = df[mascara]
-
-    if coincidencias.empty:
-        return None
-    return coincidencias.iloc[0].to_dict()
-
-
-def construir_md(registro: dict, Hostname: str) -> str:
-    """Genera el contenido completo del archivo .md."""
+def construir_md(registro: dict, Hostname: str, datos_secciones: dict) -> str:
+    """Genera el contenido del .md con todos los campos."""
     lineas = ["---"]
 
-    # 1. Datos extraídos del xlsx
+    # Datos del Excel
     for clave_md, col_xlsx in COLUMNAS.items():
         valor = registro.get(col_xlsx, "").strip()
         if valor:
             lineas.append(f"{clave_md}: {_escapar_yaml(valor)}")
 
-    # 2. Propiedades fijas
+    # Propiedades fijas
     for clave, valor in PROPIEDADES_FIJAS.items():
         lineas.append(f"{clave}: {_escapar_yaml(str(valor))}")
+
+    # Datos de las secciones interactivas
+    for k, v in datos_secciones.items():
+        lineas.append(f"{k}: {_escapar_yaml(str(v))}")
 
     lineas.append("---")
     lineas.append("")
 
-    # 3. Sección de imágenes con Hostname reemplazado
+    # Imágenes
     lineas.append("imagenes:")
     for placeholder, plantilla in PLANTILLA_IMAGENES.items():
         ruta = plantilla.replace("{Hostname}", Hostname)
@@ -155,7 +277,6 @@ def construir_md(registro: dict, Hostname: str) -> str:
 
 
 def _escapar_yaml(valor: str) -> str:
-    """Envuelve en comillas si el valor contiene caracteres especiales YAML."""
     especiales = (':', '#', '{', '}', '[', ']', '&', '*', '!', '@')
     if any(c in valor for c in especiales):
         return f'"{valor}"'
@@ -163,69 +284,55 @@ def _escapar_yaml(valor: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Genera un .md desde un xlsx buscando por Hostname.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument("-x", "--xlsx", required=True, metavar="ARCHIVO.xlsx",
-                        help="Ruta al archivo Excel")
-    parser.add_argument("--Hostname", metavar="Hostname",
-                        help="Hostname a buscar (si se omite, el script lo pregunta)")
-    parser.add_argument("-o", "--salida", metavar="CARPETA/",
-                        help="Carpeta de salida (por defecto: misma carpeta del xlsx)")
+    parser = argparse.ArgumentParser(description="Busca usuario y genera .md con preguntas interactivas.")
+    parser.add_argument("-x", "--xlsx", required=True, help="Ruta al archivo Excel")
+    parser.add_argument("--Hostname", help="Hostname a buscar")
+    parser.add_argument("-o", "--salida", help="Carpeta de salida")
     args = parser.parse_args()
 
     xlsx_path = Path(args.xlsx)
     if not xlsx_path.exists():
-        sys.exit(f"ERROR: No se encontró el archivo: {xlsx_path}")
+        sys.exit(f"ERROR: No se encontró {xlsx_path}")
 
-    print(f"\n📂 Cargando: {xlsx_path}")
-    df = leer_xlsx(xlsx_path)
-    print(f"   {len(df)} usuario(s) encontrados en el archivo.\n")
-
-    # Obtener Hostname (argumento o input interactivo)
-    if args.Hostname:
-        Hostname = args.Hostname.strip()
-    else:
-        Hostname = input("🔍 Ingresa el Hostname a buscar: ").strip()
-
-    if not Hostname:
-        sys.exit("ERROR: El Hostname no puede estar vacío.")
+    df = pd.read_excel(xlsx_path, dtype=str, keep_default_na=False)
+    df.columns = [c.strip() for c in df.columns]
+    df = df.fillna("").apply(lambda col: col.str.strip())
 
     # Buscar usuario
-    registro = buscar_Hostname(df, Hostname)
-    if registro is None:
-        print(f"\n❌ No se encontró ningún usuario con Hostname: '{Hostname}'")
-        # Mostrar Hostnames similares como sugerencia
-        col_h = COLUMNAS["Hostname"]
-        todos = df[col_h].str.upper().tolist()
-        similares = [h for h in todos if Hostname.upper()[:4] in h]
-        if similares:
-            print(f"   ¿Quisiste decir? → {', '.join(similares[:5])}")
-        sys.exit(1)
+    Hostname = args.Hostname or input("🔍 Ingresa el Hostname: ").strip()
+    col_h = COLUMNAS["Hostname"]
+    coincidencias = df[df[col_h].str.upper() == Hostname.upper()]
 
-    # Usar el Hostname tal como está en el xlsx (respetando mayúsculas originales)
-    Hostname_real = registro[COLUMNAS["Hostname"]]
+    if coincidencias.empty:
+        sys.exit(f"❌ No encontrado: {Hostname}")
 
-    print(f"\n✅ Usuario encontrado:")
-    for clave_md, col_xlsx in COLUMNAS.items():
-        print(f"   {clave_md:<15} {registro.get(col_xlsx, '')}")
+    registro = coincidencias.iloc[0].to_dict()
+    Hostname_real = registro[col_h]
 
-    # Construir contenido del .md
-    contenido_md = construir_md(registro, Hostname_real)
+    print(f"\n✅ Usuario encontrado: {Hostname_real} - {registro.get('Nombre', '')}\n")
 
-    # Ruta de salida
+    # === EJECUTAR SECCIONES INTERACTIVAS ===
+    datos = {}
+    datos.update(seccion_1_pna())
+    datos.update(seccion_2_chat())
+    datos.update(seccion_3_antivirus())
+    datos.update(seccion_4_plugin())
+    datos.update(seccion_5_control_remoto())
+    datos.update(seccion_6_acceso_web())
+    datos.update(seccion_7_panel())
+    datos.update(seccion_8_sap())
+
+    # Generar MD
+    contenido = construir_md(registro, Hostname_real, datos)
+
     salida_dir = Path(args.salida) if args.salida else xlsx_path.parent
     salida_dir.mkdir(parents=True, exist_ok=True)
     md_path = salida_dir / f"{Hostname_real}.md"
 
-    md_path.write_text(contenido_md, encoding="utf-8")
+    md_path.write_text(contenido, encoding="utf-8")
 
     print(f"\n📄 Archivo generado: {md_path}")
-    print("\n── Contenido ──────────────────────────────────")
-    print(contenido_md)
-    print("───────────────────────────────────────────────")
-    print(f"\nSiguiente paso:")
+    print("\nSiguiente paso:")
     print(f"  python fill_template.py -t formato.docx -d {md_path}\n")
 
 
