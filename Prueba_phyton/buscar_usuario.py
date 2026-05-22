@@ -7,6 +7,7 @@ con preguntas interactivas por sección.
 """
 
 import argparse
+import subprocess
 import sys
 from pathlib import Path
 
@@ -330,10 +331,48 @@ def main():
     md_path = salida_dir / f"{Hostname_real}.md"
 
     md_path.write_text(contenido, encoding="utf-8")
+    print(f"\n📄 Markdown generado: {md_path}")
 
-    print(f"\n📄 Archivo generado: {md_path}")
-    print("\nSiguiente paso:")
-    print(f"  python fill_template.py -t formato.docx -d {md_path}\n")
+    # ── Paso 2: fill_template.py → genera el .docx ──────────────────
+    docx_path = salida_dir / f"{Hostname_real}.docx"
+    script_dir = Path(__file__).parent   # misma carpeta que buscar_usuario.py
+    fill_script = script_dir / "fill_template.py"
+
+    print(f"\n⚙️  Generando DOCX: {docx_path.name} ...")
+    resultado = subprocess.run(
+        [sys.executable, str(fill_script),
+         "-t", "template.docx",
+         "-d", str(md_path),
+         "-o", str(docx_path)],
+        capture_output=True, text=True, encoding='utf-8', errors='replace'
+    )
+    if resultado.returncode != 0:
+        print("❌ Error en fill_template.py:")
+        print(resultado.stderr)
+        sys.exit(1)
+    print(f"✅ DOCX generado: {docx_path.name}")
+
+    # ── Paso 3: LibreOffice → convierte el .docx a PDF ──────────────
+    LIBRE_OFFICE = r"C:\Program Files\LibreOffice\program\soffice.exe"
+
+    print(f"\n⚙️  Convirtiendo a PDF ...")
+    resultado_pdf = subprocess.run(
+        [LIBRE_OFFICE, "--headless", "--convert-to", "pdf",
+         str(docx_path), "--outdir", str(salida_dir)],
+        capture_output=True, text=True, encoding='utf-8', errors='replace'
+    )
+    if resultado_pdf.returncode != 0:
+        print("❌ Error al convertir a PDF:")
+        print(resultado_pdf.stderr)
+        sys.exit(1)
+
+    pdf_path = salida_dir / f"{Hostname_real}.pdf"
+    print(f"✅ PDF generado: {pdf_path.name}")
+    print(f"\n{'─'*50}")
+    print(f"  .md   → {md_path}")
+    print(f"  .docx → {docx_path}")
+    print(f"  .pdf  → {pdf_path}")
+    print(f"{'─'*50}\n")
 
 
 if __name__ == "__main__":

@@ -42,6 +42,7 @@ USO
 import argparse
 import re
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
 from copy import deepcopy
 from pathlib import Path
 
