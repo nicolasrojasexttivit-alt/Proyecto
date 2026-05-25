@@ -20,7 +20,12 @@ import pandas as pd
 print("\n" + "="*60)
 fecha = input("Ingrese la fecha de toma de evidencias: ")
 print("\n" + "="*60)
+print("\n" + "="*60)
+opc = input("Ingrese el tipo de Template a llenar: 1. OFICINA 2. Comex&Logistica: ")
+tipo_template = "OFICINA" if opc == "1"  else "Comex&Logistica"
+print("\n" + "="*60)
 PROPIEDADES_FIJAS = {
+    "OFI_COMMEX":   tipo_template,
     "GESTOR":        "GESTOR: Jhoan Nicolas Cruz Sierra",
     "FECHA":           "FECHA: " + fecha,
     "LUGAR":        "LUGAR: Bogotá",
@@ -341,7 +346,7 @@ def main():
     print(f"\n⚙️  Generando DOCX: {docx_path.name} ...")
     resultado = subprocess.run(
         [sys.executable, str(fill_script),
-         "-t", "template.docx",
+         "-t", "seguridad_template.docx",
          "-d", str(md_path),
          "-o", str(docx_path)],
         capture_output=True, text=True, encoding='utf-8', errors='replace'
