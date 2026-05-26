@@ -1,0 +1,63 @@
+---
+Hostname: PRPOAASCE491L
+USUARIO: ANDREA ESMERALDA ASCENCIO OLAYA
+correo: "andrea.ascencio@juanvaldezcafe.com"
+ip: 192.168.1.17
+OFI_COMMEX: OFICINA
+GESTOR: "GESTOR: Jhoan Nicolas Cruz Sierra"
+FECHA: "FECHA: 121212"
+LUGAR: "LUGAR: Bogotá"
+CARGO: "CARGO: Analista Soporte en Sitio"
+CIUDAD: Bogotá
+tipo_actividad: Inventario de equipos
+FACEBOOK_SI: X
+FACEBOOK_NO: ' '
+INSTA_SI: X
+INSTA_NO: ' '
+X_SI: X
+X_NO: ' '
+TIKTOK_SI: X
+TIKTOK_NO: ' '
+OBSERVACIONES_PNAUTORIZADAS: "Observaciones: xd"
+WHAT_WEB_S: ' '
+WHAT_WEB_N: X
+WHAT_APP_S: ' '
+WHAT_APP_N: X
+OBSERVACIONES_WHATSAPP: "Observaciones: Sin observaciones"
+CROWD_SI: X
+CROWD_NO: ' '
+OBSERVACIONES_ANTI: "Observaciones: Sin observaciones"
+TRELL_SI: X
+TRELL_NO: ' '
+OBSERVACIONES_TRELL: "Observaciones: Sin observaciones"
+ANY_SI: ' '
+ANY_NO: X
+TEAM_SI: ' '
+TEAM_NO: X
+OBSERVACIONES_CREMOTO: "Observaciones: Sin observaciones"
+ANYW_SI: ' '
+ANYW_NO: X
+TEAMW_SI: ' '
+TEAMW_NO: X
+OBSERVACIONS_CRWEB: "Observaciones: Sin observaciones"
+OBSERVACIONES_PANEL: "Observaciones: Sin observaciones"
+OBSERVACIONES_SAP: "Observaciones: Sin observaciones"
+---
+
+imagenes:
+  IMAGEN_1: PRPOAASCE491L/1 (1).png
+  IMAGEN_2: PRPOAASCE491L/1 (2).png
+  IMAGEN_3: PRPOAASCE491L/1 (3).png
+  IMAGEN_4: PRPOAASCE491L/1 (4).png
+  IMAGEN_5: PRPOAASCE491L/1 (5).png
+  IMAGEN_6: PRPOAASCE491L/1 (6).png
+  IMAGEN_7: PRPOAASCE491L/1 (7).png
+  IMAGEN_8: PRPOAASCE491L/1 (8).png
+  IMAGEN_9: PRPOAASCE491L/1 (9).png
+  IMAGEN_10: PRPOAASCE491L/1 (10).png
+  IMAGEN_11: PRPOAASCE491L/1 (11).png
+  IMAGEN_12: PRPOAASCE491L/1 (12).png
+  IMAGEN_13: PRPOAASCE491L/1 (13).png
+  IMAGEN_14: PRPOAASCE491L/1 (14).png
+  IMAGEN_15: PRPOAASCE491L/1 (15).png
+  IMAGEN_16: PRPOAASCE491L/1 (16).png
